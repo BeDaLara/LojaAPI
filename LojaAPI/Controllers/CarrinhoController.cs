@@ -15,17 +15,17 @@ namespace LojaAPI.Controllers
             _carrinhoRepository = carrinhoRepository;
         }
         [HttpPost("registrar-carrinho")]
-        public async Task<IActionResult> RegistrarCarrinho([FromBody] Carrinho carrinho)
+        public async Task<IActionResult> RegistrarCarrinho(int usuarioId, int produtoId, int quantidade)
         {
-            var carrinhoId = await _carrinhoRepository.RegistrarCarrinhoDB(carrinho);
+            await _carrinhoRepository.RegistrarCarrinhoDB(usuarioId, produtoId, quantidade);
 
-            return Ok(new { mensagem = "Adicionado ao Carrinho com sucesso", carrinhoId });
+            return Ok(new { mensagem = "Adicionado ao Carrinho com sucesso"});
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> ExcluirProdutoCarrinho(int id)
+        public async Task<IActionResult> ExcluirProdutoCarrinho(int usuarioId, int produtoId)
         {
-            await _carrinhoRepository.ExcluirCarrinhoDB(id);
+            await _carrinhoRepository.ExcluirCarrinhoDB(usuarioId, produtoId);
 
             return Ok(new { mensagem = "Produto excluído com sucesso" });
         }
@@ -33,8 +33,11 @@ namespace LojaAPI.Controllers
         [HttpGet("consultar-carrinho")]
         public async Task<IActionResult> ListarCarrinho(int usuarioId)
         {
-            var produtos = await _carrinhoRepository.BuscarCarrinho(usuarioId);
-            return Ok(produtos);
+            var itens = await _carrinhoRepository.ConsultarCarrinho(usuarioId);
+
+            var valorTotal = await _carrinhoRepository.ValorTotalCarrinho(usuarioId);
+
+            return Ok(new {itens, valorTotal});
         }
     }
 }

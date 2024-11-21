@@ -30,7 +30,7 @@ namespace LojaAPI.Controllers
             return Ok(new { mensagem = "Produto cadastrado com sucesso", produtoId });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("atualizar-produto/{id}")]
         public async Task<IActionResult> AtualizarProduto(int id, [FromBody] Produto produto)
         {
             produto.Id = id;
@@ -39,7 +39,7 @@ namespace LojaAPI.Controllers
             return Ok(new { mensagem = "Produto atualizado com sucesso" });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deletar-produto/{id}")]
         public async Task<IActionResult> ExcluirProduto(int id)
         {
             try

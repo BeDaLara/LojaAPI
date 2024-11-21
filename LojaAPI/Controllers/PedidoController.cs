@@ -22,13 +22,28 @@ namespace LojaAPI.Controllers
             return Ok(pedidos);
         }
 
+        [HttpGet("consultar-status")]
+        public async Task<IActionResult> ConsultarStatusPedidos(int pedidoId)
+        {
+            var status = await _pedidoRepository.ConsultarStatusPedidoDb(pedidoId);
+            return Ok(status);
+        }
+
 
         [HttpPost("registrar-pedido")]
-        public async Task<IActionResult> RegistrarProduto([FromBody] Pedido pedido)
+        public async Task<IActionResult> RegistrarPedido(int usuarioId)
         {
-            var pedidoId = await _pedidoRepository.RegistrarPedidoDB(pedido);
+            try
+            {
+                var pedidoId = await _pedidoRepository.RegistrarPedidoDB(usuarioId);
+                return Ok(new { mensagem = "Pedido efetuado com sucesso", pedidoId });
 
-            return Ok(new { mensagem = "Pedido efetuado com sucesso", pedidoId });
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem= ex.Message });
+            }
+
         }
     }
 }
